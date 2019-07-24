@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://packed/obstacles/high_obstacle.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/high_obstacle.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 24.3775, 77.5463 )
+
+[node name="high_obstacle" type="RigidBody2D"]
+position = Vector2( 663.862, 182.29 )
+gravity_scale = 0.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.588165, -0.851746 )
+shape = SubResource( 1 )
