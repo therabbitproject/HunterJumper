@@ -30,6 +30,7 @@ var _running_first_frame
 var _running_last_frame
 var _running_current_frame
 var _frame_advance_threshold
+var _parent
 
 # Initialize.
 func _ready():
@@ -50,6 +51,7 @@ func _ready():
     _running_first_frame = 8
     _running_last_frame = 11
     _frame_advance_threshold = 1500
+    _parent = get_parent()
     connect("body_entered", self, "_on_body_entered")
     set_process_input(true)
     reset()
@@ -95,12 +97,15 @@ func _input(event):
                 if (event.position.x < _origin_x - _width):
                     if (event.position.y > _origin_y - _height):
                         _speed -= _speed_delta
-                        if (_speed < 0):
+                        if (_speed <= 0):
                             _speed = 0
+                            _parent.gallop_sound.stop()
                             
                 # If input in front then speeding up.
                 elif (event.position.x > _origin_x):
                     if (event.position.y > _origin_y - _height):
+                        if (_speed == 0):
+                            _parent.gallop_sound.play()
                         _speed += _speed_delta
                         if (_speed > _max_speed):
                             _speed = _max_speed
@@ -114,6 +119,8 @@ func _input(event):
                         _jump_height = _max_jump_height
                     _jump_dir = 0
                     _jump_y = 0
+                    _parent.gallop_sound.stop()
+                    _parent.boing_sound.play()
         else:
         
             # Remove colliding obstacle and restart game.
@@ -148,6 +155,8 @@ func _process(delta):
             if (_jump_y <= 0):
                 _jumping = false
                 _jump_y = 0
+                if (_speed > 0):
+                    _parent.gallop_sound.play()
 
     else:
 
@@ -173,6 +182,8 @@ func _process(delta):
 # Collision.
 func _on_body_entered(other):
     if(other.is_in_group("obstacle")):
+        _parent.gallop_sound.stop()
+        _parent.whinny_sound.play()
         speed = 0
         _speed = 0
         set_process(false)
